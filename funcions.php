@@ -91,4 +91,38 @@ function missatgeTipus(string $tipus): string
     }
 }
 
+/*
+    ACTIVITAT 8 · El login
+
+    APARTAT 3 · La funció que comprova
+    - comprovaCredencials(): mira si l'usuari existeix i si la contrasenya és bona.
+    - Torna les dades de l'usuari si tot és correcte, i null si no ho és.
+    - El ? de ?array vol dir que pot tornar un array o null. Sense el ?, el return null
+      donaria un error fatal, perquè PHP fa complir el tipus que has promès.
+*/
+
+/**
+ * Comprova un usuari i una contrasenya contra la llista d'usuaris.
+ *
+ * @param string $usuari Nom d'usuari escrit al formulari
+ * @param string $clau   Contrasenya escrita al formulari
+ * @return array|null    Dades de l'usuari, o null si no són correctes
+ */
+function comprovaCredencials(string $usuari, string $clau): ?array
+{
+    // si el nom d'usuari no esta a la llista de config.php, ja no cal mirar la contrasenya
+    if (!isset(USUARIS[$usuari])) {
+        return null;
+    }
+
+    // password_verify troba el tros aleatori que hi ha dins del hash i compara amb ell.
+    // no es pot fer amb === perque el hash surt diferent cada vegada
+    if (!password_verify($clau, USUARIS[$usuari]['hash'])) {
+        return null;
+    }
+
+    // tot correcte: torno l'array de l'usuari (amb el 'nom' i el 'hash')
+    return USUARIS[$usuari];
+}
+
 // no tanco el php al final per si queda algun espai, igual que a config.php
