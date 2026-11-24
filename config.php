@@ -54,6 +54,11 @@ const USUARIS = [
     ],
 ];
 
+// APARTAT 4: a privat.php l'hora d'entrada sortia una hora menys, perque el php.ini
+// del wamp te date.timezone = UTC. amb aixo totes les pagines que inclouen config.php
+// fan servir l'hora d'aqui
+date_default_timezone_set('Europe/Madrid');
+
 // no tanco el php al final a posta: si despres del tancament quedes un salt de linia
 // o un espai s'escriuria a la pantalla i trencaria les pagines que inclouen aquest fitxer.
 // (compte: l'etiqueta de tancar el php no es pot escriure ni dins d'un comentari amb //,
