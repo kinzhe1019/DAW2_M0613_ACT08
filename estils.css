@@ -129,3 +129,29 @@ footer {
 .tornar:hover {
     background: #c2661f;
 }
+
+/*
+    ACTIVITAT 8 · El login
+    Només afegeixo la regla del salut de la capçalera (apartat 6) i la caixa
+    dels errors del login (la classe .errors de login.php).
+*/
+
+/* el salut del header. l'enunciat posava l'enllac groc (#EFBD2A), pero el meu header
+   te el fons clar i el groc no es llegia, per aixo faig servir el verd de la botiga */
+header .usuari {
+    margin-top: .4rem;
+    font-size: .9rem;
+}
+
+header .usuari a {
+    color: #02736f;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* la caixa dels errors, com la .ok pero en vermell */
+.errors {
+    background: #f8dede;
+    border-left: 4px solid #b3261e;
+    padding: 10px;
+}
