@@ -14,6 +14,10 @@ session_start();
     - Ho he provat: he entrat, he anat a privat.php, i després en una finestra
       d'incògnit he obert privat.php directament. M'ha fet fora cap al login.
     - A sota hi ha una taula amb tot el que hi ha dins de la sessió.
+
+    AMPLIACIÓ
+    - En entrar surt un missatge diferent segons l'hora (bon dia, bona tarda o
+      bona nit), amb la funció salutacio() de funcions.php.
 */
 
 require_once 'config.php';
@@ -32,6 +36,11 @@ require 'header.php';
 
         <!-- htmlspecialchars per si el nom porta algun caracter especial -->
         <h2>Hola, <?= htmlspecialchars($_SESSION['nom']) ?></h2>
+
+        <!-- ampliacio: el missatge canvia segons l'hora -->
+        <div class="ok">
+            <p><?= salutacio() ?>! Benvingut/da a la teva àrea privada.</p>
+        </div>
 
         <!-- l'hora la va desar login.php quan va entrar -->
         <p>Has entrat a les

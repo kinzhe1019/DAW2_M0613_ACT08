@@ -125,4 +125,30 @@ function comprovaCredencials(string $usuari, string $clau): ?array
     return USUARIS[$usuari];
 }
 
+/*
+    AMPLIACIÓ · Un missatge diferent segons l'hora
+    - salutacio(): bon dia, bona tarda o bona nit. La fa servir privat.php.
+*/
+
+/**
+ * Torna la salutació que toca segons l'hora del dia.
+ *
+ * @return string 'Bon dia', 'Bona tarda' o 'Bona nit'
+ */
+function salutacio(): string
+{
+    // date('G') torna l'hora de 0 a 23 (sense zero davant) com a text.
+    // amb (int) la passo a numero per poder-la comparar
+    $hora = (int) date('G');
+
+    // de 6 a 13 bon dia, de 14 a 19 bona tarda, i la resta bona nit
+    if ($hora >= 6 && $hora < 14) {
+        return 'Bon dia';
+    } elseif ($hora >= 14 && $hora < 20) {
+        return 'Bona tarda';
+    } else {
+        return 'Bona nit';
+    }
+}
+
 // no tanco el php al final per si queda algun espai, igual que a config.php
