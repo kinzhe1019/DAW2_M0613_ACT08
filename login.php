@@ -14,6 +14,13 @@ session_start();
     - Si no, surt un sol missatge d'error a posta. No dic si el que falla és l'usuari
       o la contrasenya, perquè si no qualsevol podria anar provant noms fins a saber
       quins existeixen.
+
+    AMPLIACIÓ · Comptar els intents fallits
+    - Cada vegada que falla sumo 1 a $_SESSION['intents'], igual que el comptador de
+      visites de l'Activitat 7. Quan entra bé l'esborro amb unset().
+    - Quan arriba a MAX_INTENTS (3, a config.php) ja no comprova la contrasenya.
+    - És un bloqueig senzill: com que va a la sessió, si es tanca el navegador (o
+      s'esborra la cookie) torna a començar de zero.
 */
 
 // la configuracio (la llista d'usuaris) i les funcions, sempre amb require_once
@@ -27,29 +34,42 @@ $errors = [];
 // quan s'envia el formulari arriba per POST i llavors comprovo
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // camp() fa el trim($_POST[...] ?? ''). la contrasenya la recullo sense trim,
-    // perque els espais tambe poden formar part de la contrasenya
-    $usuari = camp('usuari');
-    $clau   = $_POST['clau'] ?? '';
-
-    // torna les dades de l'usuari si es correcte, o null si no ho es
-    $dades = comprovaCredencials($usuari, $clau);
-
-    if ($dades === null) {
-        $errors[] = 'Usuari o contrasenya incorrectes.';
+    // ampliacio: si ja ha fallat massa vegades, no el deixo ni provar.
+    // el ?? posa 0 si encara no ha fallat mai i 'intents' no existeix
+    if (($_SESSION['intents'] ?? 0) >= MAX_INTENTS) {
+        $errors[] = 'Has fallat ' . MAX_INTENTS . ' vegades. Tanca el navegador i torna-ho a provar.';
     } else {
-        // numero de sessio nou: si algu havia aconseguit el d'abans, ja no li serveix
-        session_regenerate_id(true);
 
-        // deso a la sessio qui es i a quina hora ha entrat
-        $_SESSION['usuari']  = $usuari;
-        $_SESSION['nom']     = $dades['nom'];
-        $_SESSION['entrada'] = date('H:i:s');
+        // camp() fa el trim($_POST[...] ?? ''). la contrasenya la recullo sense trim,
+        // perque els espais tambe poden formar part de la contrasenya
+        $usuari = camp('usuari');
+        $clau   = $_POST['clau'] ?? '';
 
-        // l'envio a la pagina privada. exit perque header() nomes envia la capcalera,
-        // no para la pagina
-        header('Location: privat.php');
-        exit;
+        // torna les dades de l'usuari si es correcte, o null si no ho es
+        $dades = comprovaCredencials($usuari, $clau);
+
+        if ($dades === null) {
+            $errors[] = 'Usuari o contrasenya incorrectes.';
+
+            // ampliacio: un intent fallit mes
+            $_SESSION['intents'] = ($_SESSION['intents'] ?? 0) + 1;
+        } else {
+            // numero de sessio nou: si algu havia aconseguit el d'abans, ja no li serveix
+            session_regenerate_id(true);
+
+            // ampliacio: ha entrat be, aixi que esborro el comptador d'intents
+            unset($_SESSION['intents']);
+
+            // deso a la sessio qui es i a quina hora ha entrat
+            $_SESSION['usuari']  = $usuari;
+            $_SESSION['nom']     = $dades['nom'];
+            $_SESSION['entrada'] = date('H:i:s');
+
+            // l'envio a la pagina privada. exit perque header() nomes envia la capcalera,
+            // no para la pagina
+            header('Location: privat.php');
+            exit;
+        }
     }
 }
 

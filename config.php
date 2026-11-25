@@ -59,6 +59,9 @@ const USUARIS = [
 // fan servir l'hora d'aqui
 date_default_timezone_set('Europe/Madrid');
 
+// AMPLIACIO: quantes vegades es pot fallar al login abans de bloquejar-lo
+const MAX_INTENTS = 3;
+
 // no tanco el php al final a posta: si despres del tancament quedes un salt de linia
 // o un espai s'escriuria a la pantalla i trencaria les pagines que inclouen aquest fitxer.
 // (compte: l'etiqueta de tancar el php no es pot escriure ni dins d'un comentari amb //,
